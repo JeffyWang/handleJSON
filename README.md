@@ -12,6 +12,8 @@
 
 
 **说明：**
+
+
 1. 1-4题分别对应project包内的quiz1-quiz4，每个包内分别有其入口程序用于测试，命名规则是Quiz1Test - Quiz4Test.
 2. 其中第2题做成了工具类，查询条件用Map来封装，key代表field字段名，value代表字段的值，实现了多条件查询。
 3. 其中第4题用到了多线程处理，创建了线程池，用CompletionService进行管理，实现了Callable接口，可以方便的得到线程的返回值；
