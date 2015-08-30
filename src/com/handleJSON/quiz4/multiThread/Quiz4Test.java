@@ -1,7 +1,5 @@
 package com.handleJSON.quiz4.multiThread;
 
-import javax.xml.crypto.Data;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,15 +18,15 @@ public class Quiz4Test {
 	public static void main(String[] args) {
 		//Task1： 多线程下，提取出SD_DOC=0000000151, PARTN_ROLE=AG的ORDER_PARTNERS_OUT子节点
 		task1();
-		
+
 		//Task2： 多线程下，统计一下SD_DOC=0000000151一共出现了几次
 		task2();
-		
+
 		//Task3： 多线程下，将SD_DOC=0000000151, PARTN_ROLE=AG的ORDER_PARTNERS_OUT
 		//子节点的LEVEL_NR设置为100, 并将结果保存在另一个json文件中
 		task3();
 	}
-	
+
 	public static void task3() {
 		String path = "resource";
 		String nodeName = "ORDER_PARTNERS_OUT";
@@ -37,10 +35,10 @@ public class Quiz4Test {
 		conditions.put("PARTN_ROLE", "AG");
 		Map<String,Object> updateConditions = new HashMap<String,Object>();
 		updateConditions.put("LEVEL_NR", 100);
-		String outPath = "resource/updatedData";
+		String outPath = "resource/Quiz4_new_childNode";
 		MultiThreadUtility.upDateAndSave(path, nodeName, conditions,updateConditions,outPath);
 	}
-	
+
 	public static void task2() {
 		String path = "resource";
 		Map<String,Object> conditions = new HashMap<String,Object>();
@@ -48,7 +46,7 @@ public class Quiz4Test {
 		int count = MultiThreadUtility.getCount(path, conditions);
 		System.out.println(count);
 	}
-	
+
 	public static void task1() {
 		String path = "resource";
 		String nodeName = "ORDER_PARTNERS_OUT";

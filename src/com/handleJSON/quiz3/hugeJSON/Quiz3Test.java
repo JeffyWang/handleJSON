@@ -12,7 +12,7 @@ import com.handleJSON.quiz4.multiThread.MultiThreadUtility;
  */
 public class Quiz3Test {
 
-	
+
 	public static void main(String[] args) {
 		//Task1:大文件下，提取出SD_DOC=0000000151, PARTN_ROLE=AG的ORDER_PARTNERS_OUT子节点
 		task1();
@@ -22,7 +22,7 @@ public class Quiz3Test {
 		//LEVEL_NR设置为100, 并将结果保存在另一个json文件中
 		task3();
 	}
-	
+
 	public static void task3() {
 		String filePath = "resource/responseDetailsOfSalesorderItem.json";
 		String nodeName = "ORDER_PARTNERS_OUT";
@@ -36,13 +36,13 @@ public class Quiz3Test {
 		conditions.put("PARTN_ROLE", "AG");
 		Map<String,Object> updateConditions = new HashMap<String,Object>();
 		updateConditions.put("LEVEL_NR", 100);
-		String outPath = "resource/updatedData";
-		String childNode = MultiThreadUtility.upDateAndSave(path, nodeName, 
+		String outPath = "resource/Quiz3_new_childNode";
+		String childNode = MultiThreadUtility.upDateAndSave(path, nodeName,
 				conditions, updateConditions, outPath);
 		System.out.println(childNode);
 	}
-	
-	
+
+
 	public static void task2() {
 		String filePath = "resource/responseDetailsOfSalesorderItem.json";
 		String nodeName = "ORDER_PARTNERS_OUT";
@@ -56,7 +56,7 @@ public class Quiz3Test {
 		int num = MultiThreadUtility.getCount(path, conditions);
 		System.out.println(num);
 	}
-	
+
 	public static void task1() {
 		String filePath = "resource/responseDetailsOfSalesorderItem.json";
 		String nodeName = "ORDER_PARTNERS_OUT";

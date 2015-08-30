@@ -14,12 +14,12 @@ import com.handleJSON.quiz2.util.JSONProcessUtil;
 
 
 public class SplitHugeJSON {
-	   private static final String WRAP_LINE = "\n";
-	   private static final String QUOTO= "\"";
-	
+	private static final String WRAP_LINE = "\n";
+	private static final String QUOTO= "\"";
+
 	private SplitHugeJSON() {
 
-	}	
+	}
 	/**
 	 * split huge file to plenty of small file by given child-node's name.
 	 * @param filePath A pathname string
@@ -31,14 +31,14 @@ public class SplitHugeJSON {
 		boolean startSplit = false;
 		StringBuilder sb = new StringBuilder("{"+WRAP_LINE);
 		int count = 0;
-        int fileNum = 1;
-        try {
-        	BufferedReader reader = new BufferedReader(new FileReader(
-        			new File(filePath).getAbsoluteFile()));
-	        try {
-	        	String line;
-		        while((line = reader.readLine()) != null){
-		        	//check if its' the target node
+		int fileNum = 1;
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(
+					new File(filePath).getAbsoluteFile()));
+			try {
+				String line;
+				while((line = reader.readLine()) != null){
+					//check if its' the target node
 					if (line.indexOf(nodeName) != -1) {
 						if (line.indexOf("[ ]") == -1) {
 							startSplit = true;
@@ -54,18 +54,18 @@ public class SplitHugeJSON {
 							//when reach the number of target object number
 							if (count >= objectNum) {
 								sb.append(line.split("}")[0]+"} ]"+WRAP_LINE+"}");
-								JSONProcessUtil.writeFile(sb.toString(), filePath.split("/")[0]+"/"+nodeName+"/"+nodeName+"_"+fileNum+".json");
+								JSONProcessUtil.writeFile(sb.toString(), filePath.split("/")[0]+"/Quiz3_"+nodeName+"/"+nodeName+"_"+fileNum+".json");
 								sb.setLength(0);
 								sb.trimToSize();
 								String tmp = "{"+WRAP_LINE+QUOTO +nodeName+QUOTO+" : [{"+WRAP_LINE;
 								sb.append(tmp);
 								count = 0;
 								fileNum++;
-								
+
 							}else {
 								if (line.indexOf("} ]") != -1) {
 									sb.append(line.split("} ]")[0]+"} ]"+WRAP_LINE+"}");
-									JSONProcessUtil.writeFile(sb.toString(), filePath.split("/")[0]+"/"+nodeName+"/"+nodeName+"_"+fileNum+".json");
+									JSONProcessUtil.writeFile(sb.toString(), filePath.split("/")[0]+"/Quiz3_"+nodeName+"/"+nodeName+"_"+fileNum+".json");
 									break;
 								}else {
 									sb.append(line+WRAP_LINE);
@@ -75,14 +75,14 @@ public class SplitHugeJSON {
 							sb.append(line+WRAP_LINE);
 						}
 					}
-		        }
-	        }finally{
-	        	reader.close();
-	        }
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-        System.out.println("split function finished.");
+				}
+			}finally{
+				reader.close();
+			}
+		} catch(IOException e){
+			e.printStackTrace();
+		}
+		System.out.println("split function finished.");
 	}
 
 }
