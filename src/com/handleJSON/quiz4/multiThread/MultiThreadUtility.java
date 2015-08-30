@@ -9,14 +9,14 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 /**
- * 
+ *
  * @author wangchao
  *
  */
 public final class MultiThreadUtility {
-	
+
 	private MultiThreadUtility() {
-		
+
 	}
 
 	/**
@@ -34,42 +34,46 @@ public final class MultiThreadUtility {
 	 * @param outPath A output pathname
 	 * @return if finished, return success
 	 */
-	public static String upDateAndSave(String path, String nodeName, 
-			Map<String,Object> conditions,Map<String,Object> updateConditions,String outPath) {
+	public static String upDateAndSave(String path, String nodeName,
+									   Map<String,Object> conditions,Map<String,Object> updateConditions,String outPath) {
 		//create thread pool
 		ExecutorService exec = Executors.newCachedThreadPool();
-		CompletionService<String> compService = new ExecutorCompletionService<>(exec);
+		CompletionService<String> compService = new ExecutorCompletionService<String>(exec);
 
 		File dirctory = new File(path);
 		File[] files = dirctory.listFiles();
-		
+		int tmp = 0;
+
 		if (files != null && files.length != 0) {
-			for (int i = 0; i < files.length; i++) {
-				if (!files[i].isDirectory()) {
-					//Task3: get update and save
-					compService.submit(new UpdateAndSaveCallable(
-							files[i].getAbsolutePath(),nodeName,conditions,
-								updateConditions,outPath+"/new_"+nodeName+"_"+i+".json"));
+			for(File file : files){
+				if (file.isFile()) {
+					if (file.isFile()) {
+						//Task3: get update and save
+						compService.submit(new UpdateAndSaveCallable(
+								file.getAbsolutePath(),nodeName,conditions,
+								updateConditions,outPath+"/new_"+nodeName+"_"+tmp+".json"));
+						tmp++;
+					}
 				}
 			}
-			
+
 			//check results
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < tmp; i++) {
 				try {
 					compService.take();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			exec.shutdown();
-			
+
 		}else {
 			System.out.println("path not exsist or have no file");
 		}
 		return "success";
 	}
-	
+
 	/**
 	 * get the number of given conditions field/value appears
 	 * @param path A path name string
@@ -81,43 +85,47 @@ public final class MultiThreadUtility {
 	public static int getCount(String path, Map<String, Object> conditions) {
 		//create thread pool
 		ExecutorService exec = Executors.newCachedThreadPool();
-		CompletionService<Integer> compService = 
-				new ExecutorCompletionService<>(exec);
+		CompletionService<Integer> compService =
+				new ExecutorCompletionService<Integer>(exec);
 
 		File dirctory = new File(path);
 		File[] files = dirctory.listFiles();
 		int total = 0;
-		
+		int tmp = 0;
+
 		if (files != null && files.length != 0) {
 			for(File file : files){
-				//Task2: get count
-				compService.submit(new GetCountCallable(
-						file.getAbsolutePath(),conditions));
+				if (file.isFile()) {
+					tmp++;
+					//Task2: get count
+					compService.submit(new GetCountCallable(
+							file.getAbsolutePath(),conditions));
+				}
 			}
-			
+
 			//check results
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < tmp; i++) {
 				try {
 					Future<Integer> future = compService.take();
 					total = total+future.get();
-					
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			exec.shutdown();
-			
+
 		}else {
 			System.out.println("path not exsist or have no file");
 		}
 		return total;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param path A path name string
 	 * @param nodeName the name of child node
 	 * @param conditions conditions the key/value of the conditions;
@@ -126,42 +134,46 @@ public final class MultiThreadUtility {
 	 * @return the string of plenty of child node 
 	 */
 	public static String getChildNode(String path,
-			String nodeName,Map<String,Object> conditions) {
+									  String nodeName,Map<String,Object> conditions) {
 		//create thread pool
 		ExecutorService exec = Executors.newCachedThreadPool();
-		CompletionService<String> compService = 
-				new ExecutorCompletionService<>(exec);
+		CompletionService<String> compService =
+				new ExecutorCompletionService<String>(exec);
 
 		File dirctory = new File(path);
 		File[] files = dirctory.listFiles();
 		StringBuilder sb = new StringBuilder();
-		
+		int tmp = 0;
+
 		if (files != null && files.length != 0) {
 			for(File file : files){
 				//Task1: get child-node
-				compService.submit(new GetChildCallable(
-						file.getAbsolutePath(),nodeName,conditions));
+				if (file.isFile()) {
+					tmp++;
+					compService.submit(new GetChildCallable(
+							file.getAbsolutePath(),nodeName,conditions));
+				}
 			}
-			
+
 			//check results
-			for (int i = 0; i < files.length; i++) {
+			for (int i = 0; i < tmp; i++) {
 				try {
 					Future<String> future = compService.take();
 					sb.append(future.get()+"\n");
-					
+
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			exec.shutdown();
-			
+
 		}else {
 			System.out.println("path not exsist or have no file");
 		}
 		return sb.toString();
 	}
-	
+
 }
